@@ -1,17 +1,16 @@
 package com.datricle.churpy.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,11 +42,16 @@ fun MusicScreen() {
             state = pagerState,
             modifier = Modifier.weight(1f)
         ) { currentPage ->
+            Image(
+                painter = painterResource(id = R.drawable.bg),
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillHeight,
+                contentDescription = "Song Image"
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(10.dp),
-                horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
@@ -61,11 +65,9 @@ fun MusicScreen() {
                     text = items[currentPage].singer_name,
                     style = MaterialTheme.typography.subtitle1
                 )
-
                 Spacer(modifier = Modifier.height(10.dp))
-
-                Row{
-                    Row(horizontalArrangement = Arrangement.Start){
+                Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                    Row {
                         IconButton(onClick = { /*TODO*/ }) {
                             Column {
                                 Icon(
@@ -79,7 +81,6 @@ fun MusicScreen() {
                             }
 
                         }
-                        Spacer(modifier = Modifier.width(10.dp))
                         IconButton(onClick = { /*TODO*/ }) {
                             Column {
                                 Icon(
@@ -93,22 +94,36 @@ fun MusicScreen() {
                             }
                         }
                     }
-                    Row(horizontalArrangement = Arrangement.End) {
+                    Row {
                         IconButton(onClick = { /*TODO*/ }) {
-                            Column {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_favorite),
-                                    contentDescription = "Favorite"
-                                )
-                                Text(
-                                    fontSize = 12.sp,
-                                    text = "111.6k"
-                                )
-                            }
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_more),
+                                contentDescription = "More"
+                            )
 
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    var sliderPosition by remember { mutableStateOf(0f) }
+                    //Text(text = sliderPosition.toString())
+                    Slider(
+                        value = sliderPosition,
+                        onValueChange = { sliderPosition = it },
+                        valueRange = 0f..100f,
+                        onValueChangeFinished = {
+                            // launch some business logic update with the state you hold
+                            // viewModel.updateSelectedSliderValue(sliderPosition)
+                        },
+                        colors = SliderDefaults.colors(
+                            thumbColor = Color.White,
+                            activeTrackColor = Color.White
+                        )
+                    )
+                    // Text(text = sliderPosition.toString())
+                }
+
             }
         }
     }

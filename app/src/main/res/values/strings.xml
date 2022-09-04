@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Churpy</string>
+    <string name="music">Music</string>
+    <string name="for_you">For You</string>
+    <string name="me">Me</string>
+</resources>

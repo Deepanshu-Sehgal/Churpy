@@ -1,5 +1,6 @@
 package com.datricle.churpy.screens
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,7 +28,7 @@ import com.google.accompanist.pager.rememberPagerState
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-@Preview
+@Preview(showSystemUi = true)
 fun MusicScreen() {
     Column(
         modifier = Modifier
@@ -43,11 +44,12 @@ fun MusicScreen() {
             modifier = Modifier.weight(1f)
         ) { currentPage ->
             Image(
-                painter = painterResource(id = R.drawable.bg),
+                painter = painterResource(id = R.drawable.ic_launcher_background),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillHeight,
                 contentDescription = "Song Image"
             )
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()

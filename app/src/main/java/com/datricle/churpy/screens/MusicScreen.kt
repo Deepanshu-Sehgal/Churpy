@@ -1,6 +1,5 @@
 package com.datricle.churpy.screens
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,13 +7,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import com.datricle.churpy.R
 import com.datricle.churpy.composables.MusicViewPager.createItems
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.VerticalPager
 import com.google.accompanist.pager.rememberPagerState
 
@@ -44,7 +39,7 @@ fun MusicScreen() {
             modifier = Modifier.weight(1f)
         ) { currentPage ->
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
+                painter = painterResource(id = R.drawable.bg),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillHeight,
                 contentDescription = "Song Image"
@@ -60,9 +55,7 @@ fun MusicScreen() {
                     text = items[currentPage].song_name,
                     style = MaterialTheme.typography.h4
                 )
-
                 Spacer(modifier = Modifier.height(10.dp))
-
                 Text(
                     text = items[currentPage].singer_name,
                     style = MaterialTheme.typography.subtitle1
@@ -125,7 +118,6 @@ fun MusicScreen() {
                     )
                     // Text(text = sliderPosition.toString())
                 }
-
             }
         }
     }

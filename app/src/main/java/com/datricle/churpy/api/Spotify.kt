@@ -1,20 +1,33 @@
 package com.datricle.churpy.api
 
+import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import java.io.IOException
 import java.net.URLEncoder
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
+/**
+ * Simple Spotify-like API helper using OkHttp.
+ *
+ * Note: This is a lightweight wrapper for the RapidAPI YouTube Music endpoint used
+ * for demonstration. The function suspends and returns the raw response body as a
+ * String, or null if the request failed.
+ */
 class Spotify {
     companion object {
         private val client = OkHttpClient()
 
-        // Asynchronous search helper. Caller provides a query and a callback which
-        // receives the response body as a String (or null on failure).
-        fun search(query: String, callback: (String?) -> Unit) {
+        /**
+         * Perform a search query against the demo API and return the response body.
+         * This is a suspending function and should be called from a coroutine.
+         *
+         * @param query Search query text
+         * @return Response body string on success, or null on failure
+         */
+        suspend fun search(query: String): String? = suspendCancellableCoroutine { cont ->
             val encoded = URLEncoder.encode(query, "utf-8")
             val request = Request.Builder()
                 .url("https://youtube-music1.p.rapidapi.com/v2/search?query=$encoded")
@@ -23,15 +36,18 @@ class Spotify {
                 .addHeader("X-RapidAPI-Host", "youtube-music1.p.rapidapi.com")
                 .build()
 
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    callback(null)
+            val call: Call = client.newCall(request)
+            cont.invokeOnCancellation { call.cancel() }
+
+            call.enqueue(object : okhttp3.Callback {
+                override fun onFailure(call: Call, e: java.io.IOException) {
+                    if (!cont.isCancelled) cont.resume(null)
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     response.use {
                         val body = it.body?.string()
-                        callback(body)
+                        if (!cont.isCancelled) cont.resume(body)
                     }
                 }
             })

@@ -13,6 +13,11 @@ import com.datricle.churpy.composables.BottomNavigation.BottomNavigationBar
 import com.datricle.churpy.composables.BottomNavigation.NavigationSetup
 import com.datricle.churpy.ui.theme.ChurpyTheme
 
+/**
+ * MainActivity hosts the Compose content and sets up the bottom navigation.
+ * The app UI is constructed using a `Scaffold` with a `BottomNavigationBar` and
+ * a `NavHost` to switch between screens.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

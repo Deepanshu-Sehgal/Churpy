@@ -6,6 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Button
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,11 +31,51 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 @Preview(showSystemUi = true)
 fun MusicScreen() {
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.DarkGray)
     ) {
+        // Simple network search UI: enter a query and tap Search to fetch raw results.
+        var query by remember { mutableStateOf("diljit dosanj") }
+        var searchResult by remember { mutableStateOf<String?>(null) }
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)) {
+            OutlinedTextField(
+                value = query,
+                onValueChange = { query = it },
+                label = { Text("Search") },
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(onClick = {
+                scope.launch {
+                    searchResult = try {
+                        com.datricle.churpy.api.Spotify.search(query)
+                    } catch (e: Exception) {
+                        "Error: ${e.localizedMessage}"
+                    }
+                }
+            }) {
+                Text("Search")
+            }
+        }
+
+        // Show a short preview of the raw search result (for debugging/demo).
+        searchResult?.let { res ->
+            Text(
+                text = if (res.length > 400) res.substring(0, 400) + "..." else res,
+                color = Color.White,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .verticalScroll(rememberScrollState())
+            )
+        }
         val items = createItems()
         val pagerState = rememberPagerState()
 
